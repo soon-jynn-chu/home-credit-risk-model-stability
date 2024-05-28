@@ -5,11 +5,10 @@ This repository stores the notebooks for my participation on this Kaggle competi
 ## Feature Engineering
 ### Data Aggregation
 
-For depth > 0 features, aggregation may be needed to condense the historical records associated with each `case_id` into a single feature.Thus, aggregation functions are defined based on their transformation groups:
+For depth > 0 features, aggregation may be needed to condense the historical records associated with each `case_id` into a single feature. Thus, aggregation functions are defined based on their transformation groups:
 
-- P, A, D - max, mean, var
-- M, String/Boolean dtypes - mode
-- others - max
+- All - max
+- P, A, D - + mean, var
 
 ### Feature Selection
 For numerical columns, I use Pearson correlation to drop columns that are highly correlated, whereas Cramer's V for categorical columns.
@@ -19,20 +18,22 @@ All models are trained using stratified group k-fold cross-validation, with `WEE
 
 | Model | Public LB | Private LB |
 |---|---|---|
-| LGB | 0.580 |  |
-| XGB | 0.586 |  |
-| Cat | 0.579 |  |
-| Hist | 0.585 |  |
-| LGB + Cat | 0.590 |  |
-| XGB + Hist | 0.588 |  |
-| LGB + XGB + Cat | 0.591 | |
-| LGB + Cat + Hist | **0.593** |  |
-| LGB + XGB + Hist | 0.588 |  | 
-| XGB + Cat + Hist | 0.592 |  |
-| LGB + XGB + Cat + Hist | **0.593** |  | 
-| LGB + XGB + Cat + Hist -> SGD(*log_loss*) | 0.579 |  |
-| LGB + XGB + Cat + Hist -> LGB | 0.592 |  |
-| LGB + XGB + Cat + Hist -> XGB |  |  | 
+| LGB | 0.580 | 0.500 |
+| XGB | 0.586 | 0.509 |
+| Cat | 0.579 | 0.509 |
+| Hist | 0.585 | 0.501 |
+| LGB + Cat | 0.590 | 0.516 |
+| XGB + Hist | 0.588 | 0.509 |
+| LGB + XGB + Cat | 0.591 | 0.517* |
+| LGB + Cat + Hist | 0.593* | 0.516 |
+| LGB + XGB + Hist | 0.588 | 0.509 | 
+| XGB + Cat + Hist | 0.592 | 0.516 |
+| LGB + XGB + Cat + Hist | 0.593* | 0.516 | 
+| 0.75 (LGB + Cat) + 0.25 (XGB + Hist) | 0.592 | 0.517* |
+| 0.4 Cat + 0.6 (LGB + XGB + Hist)| 0.592 | 0.517* |
+| LGB + XGB + Cat + Hist -> SGD(*log_loss*) | 0.579 | 0.499 |
+| LGB + XGB + Cat + Hist -> LGB | 0.592 | 0.513 |
+| LGB + XGB + Cat + Hist -> XGB | 0.585 | 0.502 | 
 
 - LGB - LightGBM
 - XGB - XGBoost
